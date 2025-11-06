@@ -1,11 +1,13 @@
 ﻿using ControleEstoque.Data;
 using ControleEstoque.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ControleEstoque.Controllers
 {
+    [Authorize]
     public class MovimentacaosController : Controller
     {
         private readonly ApplicationDbContext _context;

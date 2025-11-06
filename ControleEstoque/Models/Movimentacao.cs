@@ -21,7 +21,7 @@ namespace ControleEstoque.Models
         [Display(Name = "Tipo da Movimentação")]
         public string? Tipo { get; set; } // Entrada ou Saída
 
-        [Required]
+
         [DataType(DataType.Date)]
         [Display(Name = "Data da Movimentação")]
         public DateTime? DataMovimentacao { get; set; }
