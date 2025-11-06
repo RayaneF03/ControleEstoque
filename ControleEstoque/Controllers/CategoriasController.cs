@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ControleEstoque.Data;
+﻿using ControleEstoque.Data;
 using ControleEstoque.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ControleEstoque.Controllers
 {
@@ -23,6 +18,25 @@ namespace ControleEstoque.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Categoria.ToListAsync());
+        }
+
+        //GET: Buscar
+        [HttpGet]// Informar o tipo da action
+        public async Task<IActionResult> Buscar(String? termo)
+        {
+            //guardar o termo da busca em uma variavel ViewData
+            ViewData["termoBusca"] = termo;
+
+            //listar todos os produtos cadastrados no banco de dados
+            List<Categoria> listaCategorias = await _context.Categoria.ToListAsync();
+
+            //filtrar somente os produtos que contem o termo procurado no nome do produto
+            if (!String.IsNullOrEmpty(termo))
+            {
+                listaCategorias = await _context.Categoria.Where(
+                    p => p.Nome.Contains(termo)).ToListAsync();
+            }
+            return View("Index", listaCategorias);
         }
 
         // GET: Categorias/Details/5

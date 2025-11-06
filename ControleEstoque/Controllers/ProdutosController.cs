@@ -30,15 +30,15 @@ namespace ControleEstoque.Controllers
             ViewData["termoBusca"] = termo;
 
             //listar todos os produtos cadastrados no banco de dados
-            List<Produto> listaproduto = await _context.Produto.ToListAsync();
+            List<Produto> listaProduto = await _context.Produto.ToListAsync();
 
             //filtrar somente os produtos que contem o termo procurado no nome do produto
             if (!String.IsNullOrEmpty(termo))
             {
-                listaproduto = await _context.Produto.Where(
+                listaProduto = await _context.Produto.Where(
                     p => p.Nome.Contains(termo)).ToListAsync();
             }
-            return View("Index", listaproduto);
+            return View("Index", listaProduto);
         }
         // GET: Produtos/Details/5
         public async Task<IActionResult> Details(int? id)

@@ -1,6 +1,7 @@
 ﻿using ControleEstoque.Data;
 using ControleEstoque.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +11,15 @@ namespace ControleEstoque.Controllers
     [Authorize]
     public class MovimentacaosController : Controller
     {
+        // Injeção de dependencia
         private readonly ApplicationDbContext _context;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public MovimentacaosController(ApplicationDbContext context)
+        // Alterar as dependencias no método construtor
+        public MovimentacaosController(ApplicationDbContext context, SignInManager<IdentityUser> signInManager)
         {
             _context = context;
+            _signInManager = signInManager;
         }
 
         // GET: Movimentacaos
@@ -65,6 +70,7 @@ namespace ControleEstoque.Controllers
 
                 movimentacao.DataMovimentacao = DateTime.Now;
 
+                movimentacao.UsuarioId = _signInManager.UserManager.GetUserId(User);
                 //localizar um registro por id
 
                 var produto = _context.Produto.FirstOrDefault(p => p.ProdutoId == movimentacao.ProdutoId);
