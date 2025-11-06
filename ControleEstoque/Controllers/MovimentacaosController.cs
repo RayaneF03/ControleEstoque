@@ -61,6 +61,39 @@ namespace ControleEstoque.Controllers
         {
             if (ModelState.IsValid)
             {
+                //As alterações da lógica, incluidas a partir desse ponto so serao executadas, se os dados vierem corretos do formulario;
+
+                movimentacao.DataMovimentacao = DateTime.Now;
+
+                //localizar um registro por id
+
+                var produto = _context.Produto.FirstOrDefault(p => p.ProdutoId == movimentacao.ProdutoId);
+
+                // verificar o tipo de movimentação
+                // se for entrada, entao eu irei aumentar a quantidade
+                // se nao -> diminuir a quantidade (diminuir no estoque)
+
+                if (movimentacao.Tipo == "Entrada")
+                {
+                    //produto.EstoqueAtual = produto.EstoqueAtual + movimentacao.Quantidade; - faz a mesma coisa que a linha abaixo.
+                    produto.EstoqueAtual += movimentacao.Quantidade;
+                }
+                else
+                {
+                    // Antes de subtrair do estoque, é preciso verificar se o estoque atual é igual ou maior que a quantidade
+                    if (produto.EstoqueAtual >= movimentacao.Quantidade)
+                    {
+                        produto.EstoqueAtual -= movimentacao.Quantidade;
+                    }
+                    else
+                    {
+                        ViewData["Alerta"] = "O Estoque Atual Do Produto " + produto.Nome + " Está Insuficiente.";
+                        ViewData["ProdutoId"] = new SelectList(_context.Produto, "ProdutoId", "Nome", movimentacao.ProdutoId);
+                        ViewData["UsuarioId"] = new SelectList(_context.Users, "Id", "Email", movimentacao.UsuarioId);
+                        return View(movimentacao);
+                    }
+                }
+
                 _context.Add(movimentacao);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -153,6 +186,21 @@ namespace ControleEstoque.Controllers
             var movimentacao = await _context.Movimentacao.FindAsync(id);
             if (movimentacao != null)
             {
+                //verificar o tipo da movimentação
+                // se for entrada -> retirar a quantidade do estoque atual
+                // senao -> devolver a quantidade o estoque atual
+
+                // buscar o produto no estoque a partir do ProdutoId da movimentação;
+                var produto = _context.Produto.FirstOrDefault(p => p.ProdutoId == movimentacao.ProdutoId);
+
+                if (movimentacao.Tipo == "Entrada")
+                {
+                    produto.EstoqueAtual -= movimentacao.Quantidade;
+                }
+                else
+                {
+                    produto.EstoqueAtual += movimentacao.Quantidade;
+                }
                 _context.Movimentacao.Remove(movimentacao);
             }
 

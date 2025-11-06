@@ -1,35 +1,41 @@
 ﻿@model IEnumerable<ControleEstoque.Models.Categoria>
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+	<a asp-action="Create">Create New</a>
 </p>
+<form asp-controller="Produto" asp-action="Buscar" method="get" class="mb-3">
+	<div class="input-group">
+		<input type="text" name="termo" class="form-control" placeholder="Buscar por nome da categoria..." value="@ViewData["termoBusca"]" /><button class="btn btn-outline-secondary" type="submit">Buscar</button>
+	</div>
+</form>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CategoriaId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CategoriaId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CategoriaId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Nome)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Nome)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.CategoriaId">Edit</a> |
+					<a asp-action="Details" asp-route-id="@item.CategoriaId">Details</a> |
+					<a asp-action="Delete" asp-route-id="@item.CategoriaId">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
 </table>

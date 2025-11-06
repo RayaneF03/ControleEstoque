@@ -3,6 +3,12 @@
 @{
 	ViewData["Title"] = "Entradas e saídas de Produção";
 	ViewData["NomeUsuario"] = "Ray";
+	var alerta = ViewData["Alerta"] as string;
+}
+
+@if (!String.IsNullOrEmpty(alerta))
+{
+	<div class="alert alert-warning">@alerta</div>
 }
 
 
